@@ -15,8 +15,8 @@ ix = randperm(length(trial));
 addpath(teamName);
 
 % Select training and testing data (you can choose to split your data in a different way if you wish)
-trainingData = trial(ix(1:50),:);
-testData = trial(ix(51:end),:);
+trainingData = trial(ix(1:90),:);
+testData = trial(ix(91:end),:);
 
 fprintf('Testing the continuous position estimator...')
 
@@ -54,9 +54,10 @@ for tr=1:size(testData,1)
             end
             
             decodedPos = [decodedPosX; decodedPosY];
-            decodedHandPos = [decodedHandPos decodedPos];
+%             decodedHandPos = [decodedHandPos decodedPos];
+            decodedHandPos = decodedPos;
             
-            meanSqError = meanSqError + norm(testData(tr,direc).handPos(1:2,t) - decodedPos)^2;
+            meanSqError = meanSqError + norm(testData(tr,direc).handPos(1:2,1:t) - decodedPos)^2;
             
         end
         n_predictions = n_predictions+length(times);
