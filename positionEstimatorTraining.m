@@ -25,7 +25,7 @@ start = 1;
 win_len = 20;
     
 for d = 1:8
-    for t = 1:50
+    for t = 1:min(size(training_data))
         for c = 1:98 
             t0 = data(t, d).spikes(c, 300-win_len:end-100);
             t0_ = zeros(1, length(t0));
