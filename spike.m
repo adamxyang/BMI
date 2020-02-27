@@ -19,9 +19,9 @@ for i = 1:100
         thres = 2;
         for t = 2:length(theta)
             if theta(t)-theta(t-1) > thres
-                theta(t) = theta(t) - pi;
+                theta(t:end) = theta(t:end) - pi;
             else if theta(t) - theta(t-1) < -thres
-                    theta(t) = theta(t) + pi;
+                    theta(t:end) = theta(t:end) + pi;
                 end
             end
             
