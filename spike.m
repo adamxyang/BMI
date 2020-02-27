@@ -34,14 +34,28 @@ end
 
 save('modified_data', 'data')
 
-plot(theta);
+%%
+i = 1;
+j = 6;
+r = [];
+for i = 1:100
+    for j = 1:8
+        r_theta = data.trial(i,j).r_theta;
+        r = [r,r_theta(2,:)];
+        plot(r_theta(2,:));
+        hold on;
+    end
+end
 
-hold on;
-plot(y_diff);
+% r_theta = data.trial(i,j).r_theta;
+% plot(r);
 
-hold on;
-plot(x_diff);
-legend('theta', 'y diff' ,'x diff');
+% hold on;
+% plot(y_diff);
+% 
+% hold on;
+% plot(x_diff);
+% legend('theta', 'y diff' ,'x diff');
 
 
 
