@@ -1,7 +1,6 @@
 clear all; clc; close all;
 addpath(genpath('.'))
-
-%% 
+ 
 data = load('monkeydata_training.mat');
 
 for i = 1:100
@@ -11,28 +10,38 @@ for i = 1:100
         x = pos_matrix(1,:);
         y = pos_matrix(2,:);
   
-        x_diff = x(2:end)-x(1:end-1);
-        y_diff = y(2:end)-y(1:end-1);
+        x_diff = x(300:end)-x(299:end-1);
+        y_diff = y(300:end)-y(299:end-1);
 
-        r = vecnorm(pos_matrix);
+        r = vecnorm([x_diff;y_diff]);
         theta = atan(y_diff./x_diff);
         
-        thres = 0;
-        for t = 1:length(theta)
-            if theta(t) < thres
-                theta(t:end) = theta(t:end) + pi;
-                thres = thres + pi;
+        thres = 2;
+        for t = 2:length(theta)
+            if theta(t)-theta(t-1) > thres
+                theta(t) = theta(t) - pi;
+            else if theta(t) - theta(t-1) < -thres
+                    theta(t) = theta(t) + pi;
+                end
             end
+            
         end
        
-        data.trial(i,j).r_theta = [r;[0,theta]];
+        data.trial(i,j).r_theta = [r;theta];
         data.trial(i,j).diff = [x_diff;y_diff];
     end
 end
 
 save('modified_data', 'data')
 
-%% sliding window
+plot(theta);
+
+hold on;
+plot(y_diff);
+
+hold on;
+plot(x_diff);
+legend('theta', 'y diff' ,'x diff');
 
 
 
