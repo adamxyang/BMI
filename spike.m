@@ -7,12 +7,25 @@ data = load('monkeydata_training.mat');
 for i = 1:100
     for j = 1:8
         pos_matrix = data.trial(i,j).handPos(1:2,:);
-        r = vecnorm(pos_matrix);
-        theta = atan(pos_matrix(1,:)./pos_matrix(2,:));
-        x_diff = pos_matrix(1,2:end)-pos_matrix(1,1:end-1);
-        y_diff = pos_matrix(2,2:end)-pos_matrix(2,1:end-1);
+        
+        x = pos_matrix(1,:);
+        y = pos_matrix(2,:);
+  
+        x_diff = x(2:end)-x(1:end-1);
+        y_diff = y(2:end)-y(1:end-1);
 
-        data.trial(i,j).r_theta = [r;theta];
+        r = vecnorm(pos_matrix);
+        theta = atan(y_diff./x_diff);
+        
+        thres = 0;
+        for t = 1:length(theta)
+            if theta(t) < thres
+                theta(t:end) = theta(t:end) + pi;
+                thres = thres + pi;
+            end
+        end
+       
+        data.trial(i,j).r_theta = [r;[0,theta]];
         data.trial(i,j).diff = [x_diff;y_diff];
     end
 end
