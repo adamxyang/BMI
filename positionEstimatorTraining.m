@@ -15,9 +15,9 @@ function [modelParameters] = positionEstimatorTraining(training_data)
   %     single structure containing all the learned parameters of your
   %     model and which can be used by the "positionEstimator" function.
   
-data = training_data;
+% data = training_data;
 
-
+data = modify_data(training_data);
 
 X = ones(30000 * 8, 99);
 y = ones(30000 * 8, 2);
@@ -35,11 +35,11 @@ for d = 1:8
             t0_ = t0_(win_len:end)';
 %             X(start:start+length(t0_)-1, 1+c+c:2+c+c) = [t0_, t0_.*t0_*10];
             X(start:start+length(t0_)-1, 1+c) = t0_;
-            a0 = data(t, d).handPos(1:2, 299:end-100)';
-            a1 = data(t, d).handPos(1:2, 300:end-99)';
-            y(start:start+length(t0_)-1, :) = a1 - a0;
-%             target = data(t,d).handPos(1:2,300:end-99)';
-%             y(start:start+length(t0_)-1, :) = target;
+%             a0 = data(t, d).handPos(1:2, 299:end-100)';
+%             a1 = data(t, d).handPos(1:2, 300:end-99)';
+%             y(start:start+length(t0_)-1, :) = a1 - a0;
+            target = data(t,d).r_theta(1:2,300:end-99)';
+            y(start:start+length(t0_)-1, :) = target;
         end
 %         y(start:start+length(t0_)-1, :) = data.trial(t, d).r_theta();
         start = start + length(t0_);
