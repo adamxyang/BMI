@@ -22,7 +22,7 @@ data = training_data;
 X = ones(30000 * 8, 99);
 y = ones(30000 * 8, 2);
 start = 1;
-win_len = 20;
+win_len = 10;
     
 for d = 1:8
     for t = 1:min(size(training_data))
@@ -50,8 +50,18 @@ end
 %     [beta,Sigma,E,CovB,logL] = mvregress(y, X);
 %     [b1,bint1,r1,rint1,stats1] = regress(y(:,1), X);
 %     [b2,bint2,r2,rint2,stats2] = regress(y(:,2), X);
-    model1 = fitrkernel(X,y(:,1));
-    model2 = fitrkernel(X,y(:,2));
+
+%     model1 = fitrkernel(X,y(:,1));
+%     model2 = fitrkernel(X,y(:,2));
+
+      model1 = fitrgp(X,y(:,1));
+      model2 = fitrgp(X,y(:,2));
+    
+%     model1 = fitrsvm(X,y(:,1),'KernelFunction','gaussian','KernelScale','auto',...
+%     'Standardize',true);
+%     model2 = fitrsvm(X,y(:,2),'KernelFunction','gaussian','KernelScale','auto',...
+%     'Standardize',true);
+    
     modelParameters = {model1, model2};
 %     modelParameters = [b1,b2];
   
