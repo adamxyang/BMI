@@ -53,16 +53,20 @@ end
 
 %     model1 = fitrkernel(X,y(:,1));
 %     model2 = fitrkernel(X,y(:,2));
-
-      model1 = fitrgp(X,y(:,1));
-      model2 = fitrgp(X,y(:,2));
+    disp('training model 1')
+    model1 = fitrgp(X,y(:,1));
+    disp('complete')
+    
+    disp('training model 2')
+    model2 = fitrgp(X,y(:,2));
+    disp('complete')
     
 %     model1 = fitrsvm(X,y(:,1),'KernelFunction','gaussian','KernelScale','auto',...
 %     'Standardize',true);
 %     model2 = fitrsvm(X,y(:,2),'KernelFunction','gaussian','KernelScale','auto',...
 %     'Standardize',true);
     
-    modelParameters = {model1, model2};
+	modelParameters = {model1, model2};
 %     modelParameters = [b1,b2];
   
 end
