@@ -43,9 +43,10 @@ for trial = 1:max(size(training_data))
         smooth_fr = smooth_fr(win_len:end)';
         X(start:start+length(smooth_fr)-1, idx) = smooth_fr;
     end
-    y_prev = data(trial, angle).handPos(1:2, 299:end-100)';
-    y_now = data(trial, angle).handPos(1:2, 300:end-99)';
-    y(start:start+length(smooth_fr)-1, :) = y_now - y_prev;
+%     y_prev = data(trial, angle).handPos(1:2, 299:end-100)';
+%     y_now = data(trial, angle).handPos(1:2, 300:end-99)';
+%     y(start:start+length(smooth_fr)-1, :) = y_now - y_prev;
+    y(start:start+length(smooth_fr)-1, :) = data(trial, angle).handPos(1:2, 300:end-100)';
     
     start = start + length(smooth_fr);
 end
