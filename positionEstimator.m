@@ -53,10 +53,10 @@ function [x, y] = positionEstimator(test_data, modelParameters)
         neuron = indices(idx);
         spike_train = data.spikes(neuron, :);
         for i = 1:win_len
-            smooth_fr(1+neuron, i) = sum(spike_train(1, 1:i)) / win_len;
+            smooth_fr(idx, i) = sum(spike_train(1, 1:i)) / win_len;
         end
         for i = win_len+1:length(spike_train)
-            smooth_fr(1+neuron, i) = mean(spike_train(1, i-win_len:i));
+            smooth_fr(idx, i) = mean(spike_train(1, i-win_len:i));
         end
     end
     
