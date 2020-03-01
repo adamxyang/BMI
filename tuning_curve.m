@@ -1,38 +1,26 @@
-data = load('monkeydata_training.mat')
+clear all; clc;
 
-win_len = 20
-avg_fr = zeros(98;8)
-for angle = 1:8
-    for 
-    end
-end
+data = load('monkeydata_training.mat');
 
+win_len = 20;
+avg_fr = zeros(98,8);
 
-X = ones(30000 * 8, 99);
-y = ones(30000 * 8, 2);
-start = 1;
-win_len = 10;
-    
-for d = 1:8
-    for t = 1:max(size(training_data))  
-        for c = 1:98 
-            t0 = data(t, d).spikes(c, 300-win_len:end-100);
-            t0_ = zeros(1, length(t0));
-            for i = win_len:length(t0)
-                t0_(i) = mean(t0(1, i-win_len+1:i));
+for neuron = 1:98
+    for angle = 1:8
+        mean_fr = 0;
+        for trial = 1:max(length(data))
+            spike_train = data.trial(trial, angle).spikes(neuron, 300-win_len:end-100);
+            smooth_fr = zeros(1,length(spike_train));
+            for i = win_len:length(spike_train)
+                smooth_fr(i) = mean(spike_train(1, i-win_len+1:i));
             end
-            t0_ = t0_(win_len:end)';
-%             X(start:start+length(t0_)-1, 1+c+c:2+c+c) = [t0_, t0_.*t0_*10];
-            X(start:start+length(t0_)-1, 1+c) = t0_;
-            a0 = data(t, d).handPos(1:2, 299:end-100)';
-            a1 = data(t, d).handPos(1:2, 300:end-99)';
-            y(start:start+length(t0_)-1, :) = a1 - a0;
-%             target = data(t,d).r_theta(1:2,300:end-99)';
-%             y(start:start+length(t0_)-1, :) = target;
+            mean_fr = mean_fr + mean(smooth_fr);
         end
-%         y(start:start+length(t0_)-1, :) = data.trial(t, d).r_theta();
-        start = start + length(t0_);
+        avg_fr(neuron,angle) = mean_fr;
     end
 end
-    X = X(1:start-1, :);
-    y = y(1:start-1, :);
+
+% normalise with softmax
+avg_fr = exp(avg_fr*1000);
+avg_fr = avg_fr./sum(avg_fr,2);
+tuned_neurons = avg_fr>0.3;
