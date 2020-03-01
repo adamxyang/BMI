@@ -25,7 +25,8 @@ start = 1;
 win_len = 10;
     
 for d = 1:8
-    for t = 1:min(size(training_data))  
+
+    for t = 1:max(size(training_data))
         for c = 1:98 
             t0 = data(t, d).spikes(c, 300-win_len:end-100);
             t0_ = zeros(1, length(t0));
@@ -56,15 +57,15 @@ end
 %     model1 = fitrkernel(X,y(:,1));
 %     model2 = fitrkernel(X,y(:,2));
 
-%     disp('training model 1')
-%     model1 = fitrgp(X,y(:,1));
-%     disp('complete')
-%     
-%     disp('training model 2')
-%     model2 = fitrgp(X,y(:,2));
-%     disp('complete')
+    disp('training model 1')
+    model1 = fitrgp(X(:,90:end),y(:,1));
+    disp('complete')
     
-%     model1 = fitrsvm(X,y(:,1),'KernelFunction','gaussian','KernelScale','auto',...
+    disp('training model 2')
+    model2 = fitrgp(X(:,90:end),y(:,2));
+    disp('complete')
+    
+%     model1 = fitsrsvm(X,y(:,1),'KernelFunction','gaussian','KernelScale','auto',...
 %     'Standardize',true);
 %     model2 = fitrsvm(X,y(:,2),'KernelFunction','gaussian','KernelScale','auto',...
 %     'Standardize',true);
