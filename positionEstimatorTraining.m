@@ -53,6 +53,7 @@ function [modelParameters] = positionEstimatorTraining(training_data)
     % end
     X = X(1:start-1, :);
     y = y(1:start-1, :);
+    disp(y)
 
     %     [beta,Sigma,E,CovB,logL] = mvregress(y, X);
     %     [b1,bint1,r1,rint1,stats1] = regress(y(:,1), X);
