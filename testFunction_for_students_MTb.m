@@ -36,7 +36,7 @@ for tr=1:size(testData,1)
     pause(0.001)
     for direc=randperm(8) 
         decodedHandPos = [];
-
+        direc = angle;
         times=320:20:size(testData(tr,direc).spikes,2);
         
         for t=times
