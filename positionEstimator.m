@@ -54,11 +54,11 @@ function [x, y] = positionEstimator(test_data, modelParameters)
         end
     end
     
-    x = cumsum(modelParameters{1}.predict(t_all'))';
-    y = cumsum(modelParameters{2}.predict(t_all'))';
+%     x = cumsum(modelParameters{1}.predict(t_all'))';
+%     y = cumsum(modelParameters{2}.predict(t_all'))';
     
-%     x = cumsum(modelParameters(:, 1)' * t_all);
-%     y = cumsum(modelParameters(:, 2)' * t_all);
+    x = cumsum(modelParameters(:, 1)' * t_all);
+    y = cumsum(modelParameters(:, 2)' * t_all);
 
 %     r = modelParameters(:, 1)' * t_all;
 %     theta = modelParameters(:, 2)' * t_all;
