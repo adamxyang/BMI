@@ -20,8 +20,7 @@ selected_neurons = tuning_curve(data);  % neuron*angle
 
 % data = modify_data(training_data);
 
-X = ones(30000 * 8, 99);
-y = ones(30000 * 8, 2);
+
 start = 1;
 win_len = 10;
     
@@ -29,6 +28,10 @@ win_len = 10;
 angle = 1;
 selected_angle = selected_neurons(:,angle);
 indices = find(selected_angle==1);
+
+X = ones(30000 * 8, length(indices));
+y = ones(30000 * 8, 2);
+
 for trial = 1:max(size(training_data))
     for idx = 1:length(indices)
         neuron = indices(idx);
