@@ -48,7 +48,7 @@ function [x, y] = positionEstimator(test_data, modelParameters)
     indices = find(selected_angle==1.);
     
     win_len = 20;
-    smooth_fr = ones(99, length(data.spikes));
+    smooth_fr = zeros(length(indices), length(data.spikes));
     for idx = 1:length(indices)
         neuron = indices(idx);
         spike_train = data.spikes(neuron, :);
