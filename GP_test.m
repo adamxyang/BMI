@@ -1,0 +1,13 @@
+x = [-4;-2;-1;0;2];
+y = [-2;0;1;2;-1];
+gpr = fitrgp(x,y,'Sigma',0.1);
+plot(x,y,'b+','DisplayName','Data');
+hold on;
+xtest = linspace(-5,5,1000)';
+[pred,~,ci] = predict(gpr,xtest);
+plot(xtest,pred,'r','DisplayName','Prediction');
+hold on;
+plot(xtest,ci(:,1),'c','DisplayName','Lower 95% Limit');
+plot(xtest,ci(:,2),'k','DisplayName','Upper 95% Limit');
+legend('show','Location','Best');
+shg;
