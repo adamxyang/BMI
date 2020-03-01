@@ -4,7 +4,7 @@
 % the relevant modelParameters, and then calls the function
 % "positionEstimator" to decode the trajectory. 
 
-function RMSE = testFunction_for_students_MTb(thres)   % teamName
+function RMSE = testFunction_for_students_MTb(angle,thres)   % teamName
 
 load monkeydata_training.mat
 
@@ -29,7 +29,7 @@ axis square
 grid
 
 % Train Model
-modelParameters = positionEstimatorTraining(trainingData, thres);
+modelParameters = positionEstimatorTraining(trainingData, angle, thres);
 
 for tr=1:size(testData,1)
     display(['Decoding block ',num2str(tr),' out of ',num2str(size(testData,1))]);

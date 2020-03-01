@@ -1,4 +1,4 @@
-function [modelParameters] = positionEstimatorTraining(training_data, thres)
+function [modelParameters] = positionEstimatorTraining(training_data, angle, thres)
   % Arguments:
   
   % - training_data:
