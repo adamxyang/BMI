@@ -25,6 +25,7 @@ start = 1;
 win_len = 10;
     
 for d = 1:8
+
     for t = 1:max(size(training_data))
         for c = 1:98 
             t0 = data(t, d).spikes(c, 300-win_len:end-100);
@@ -47,12 +48,15 @@ for d = 1:8
 end
     X = X(1:start-1, :);
     y = y(1:start-1, :);
+    disp(size(X))
+    disp(size(y))
 %     [beta,Sigma,E,CovB,logL] = mvregress(y, X);
 %     [b1,bint1,r1,rint1,stats1] = regress(y(:,1), X);
 %     [b2,bint2,r2,rint2,stats2] = regress(y(:,2), X);
 
 %     model1 = fitrkernel(X,y(:,1));
 %     model2 = fitrkernel(X,y(:,2));
+
     disp('training model 1')
     model1 = fitrgp(X(:,90:end),y(:,1));
     disp('complete')
@@ -66,7 +70,7 @@ end
 %     model2 = fitrsvm(X,y(:,2),'KernelFunction','gaussian','KernelScale','auto',...
 %     'Standardize',true);
     
-	modelParameters = {model1, model2};
+% 	modelParameters = {model1, model2};
 %     modelParameters = [b1,b2];
   
 end
