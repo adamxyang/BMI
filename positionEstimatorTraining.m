@@ -25,7 +25,7 @@ start = 1;
 win_len = 10;
     
 % for angle = 1:8
-angle = 1;
+angle = 8;
 selected_angle = selected_neurons(:,angle);
 indices = find(selected_angle==1);
 
@@ -80,7 +80,7 @@ end
 %     model2 = fitrsvm(X,y(:,2),'KernelFunction','gaussian','KernelScale','auto',...
 %     'Standardize',true);
     
-	modelParameters = {model1, model2, selected_neurons};
+	modelParameters = {model1, model2, selected_neurons,angle};
 %     modelParameters = [b1,b2];
   
 end

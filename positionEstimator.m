@@ -43,7 +43,7 @@ function [x, y] = positionEstimator(test_data, modelParameters)
     data = test_data;
     
     selected_neurons = modelParameters{3};
-    angle = 1;
+    angle = modelParameters{4};
     selected_angle = selected_neurons(:,angle);
     indices = find(selected_angle==1.);
     
