@@ -1,4 +1,4 @@
-function [modelParameters] = positionEstimatorTraining(training_data, angle, thres)
+function [modelParameters] = positionEstimatorTraining(training_data, angle, scale, thres)
   % Arguments:
   
   % - training_data:
@@ -16,7 +16,7 @@ function [modelParameters] = positionEstimatorTraining(training_data, angle, thr
   %     model and which can be used by the "positionEstimator" function.
   
     data = training_data;
-    selected_neurons = tuning_curve(data, thres);  % neuron*angle
+    selected_neurons = tuning_curve(data, scale, thres);  % neuron*angle
 
     % data = modify_data(training_data);
 
