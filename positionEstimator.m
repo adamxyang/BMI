@@ -40,22 +40,28 @@ function [x, y] = positionEstimator(test_data, modelParameters)
   % Return Value:
   % - [x, y]:
   %     current position of the hand
-   
     data = test_data;
+    
+    selected_neurons = modelParameters{3};
+    angle = 1;
+    selected_angle = selected_neurons(:,angle);
+    indices = find(selected_angle==1.);
+    
     win_len = 20;
-    t_all = ones(99, length(data.spikes));
-    for c = 1:98 
-        t0 = data.spikes(c, :);
+    smooth_fr = ones(99, length(data.spikes));
+    for idx = 1:length(indices)
+        neuron = indices(idx);
+        spike_train = data.spikes(neuron, :);
         for i = 1:win_len
-            t_all(1+c, i) = sum(t0(1, 1:i)) / win_len;
+            smooth_fr(1+neuron, i) = sum(spike_train(1, 1:i)) / win_len;
         end
-        for i = win_len+1:length(t0)
-            t_all(1+c, i) = mean(t0(1, i-win_len:i));
+        for i = win_len+1:length(spike_train)
+            smooth_fr(1+neuron, i) = mean(spike_train(1, i-win_len:i));
         end
     end
     
-    x = cumsum(modelParameters{1}.predict(t_all(90:end,:)'))';
-    y = cumsum(modelParameters{2}.predict(t_all(90:end,:)'))';
+    x = cumsum(modelParameters{1}.predict(smooth_fr'))';
+    y = cumsum(modelParameters{2}.predict(smooth_fr'))';
     
 %     x = cumsum(modelParameters(:, 1)' * t_all);
 %     y = cumsum(modelParameters(:, 2)' * t_all);
