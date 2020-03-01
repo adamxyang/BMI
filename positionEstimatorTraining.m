@@ -61,11 +61,15 @@ end
 %     model2 = fitrkernel(X,y(:,2));
 
     disp('training model 1')
+    tic;
     model1 = fitrgp(X(:,90:end),y(:,1));
+    toc
     disp('complete')
     
     disp('training model 2')
+    tic;
     model2 = fitrgp(X(:,90:end),y(:,2));
+    toc
     disp('complete')
     
 %     model1 = fitsrsvm(X,y(:,1),'KernelFunction','gaussian','KernelScale','auto',...
