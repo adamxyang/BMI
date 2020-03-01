@@ -1,4 +1,4 @@
-function [selected_neurons] = tuning_curve(training_data)
+function [selected_neurons] = tuning_curve(training_data, thres)
     data = training_data;
 
     win_len = 20;
@@ -22,5 +22,5 @@ function [selected_neurons] = tuning_curve(training_data)
     % normalise with softmax
     avg_fr = exp(avg_fr*1000);
     avg_fr = avg_fr./sum(avg_fr,2);
-    selected_neurons = avg_fr>0.3;
+    selected_neurons = avg_fr>thres;
 end

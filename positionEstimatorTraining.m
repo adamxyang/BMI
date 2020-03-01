@@ -16,7 +16,7 @@ function [modelParameters] = positionEstimatorTraining(training_data)
   %     model and which can be used by the "positionEstimator" function.
   
 data = training_data;
-selected_neurons = tuning_curve(data);  % neuron*angle
+selected_neurons = tuning_curve(data, 0.9);  % neuron*angle
 
 % data = modify_data(training_data);
 
@@ -25,7 +25,7 @@ start = 1;
 win_len = 10;
     
 % for angle = 1:8
-angle = 8;
+angle = 5;
 selected_angle = selected_neurons(:,angle);
 indices = find(selected_angle==1);
 
