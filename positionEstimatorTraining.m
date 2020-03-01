@@ -62,13 +62,13 @@ end
 
     disp('training model 1')
     tic;
-    model1 = fitrgp(X(:,90:end),y(:,1));
+    model1 = fitrgp(X,y(:,1));
     toc
     disp('complete')
     
     disp('training model 2')
     tic;
-    model2 = fitrgp(X(:,90:end),y(:,2));
+    model2 = fitrgp(X,y(:,2));
     toc
     disp('complete')
     
