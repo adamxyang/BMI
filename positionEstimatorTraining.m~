@@ -16,20 +16,25 @@ function [modelParameters] = positionEstimatorTraining(training_data)
   %     model and which can be used by the "positionEstimator" function.
   
 data = training_data;
-selected_neurons = tuning_curve(data);  % neuron*angle
+selected_neurons = tuning_curve(data, 0.9);  % neuron*angle
 
 % data = modify_data(training_data);
 
-X = ones(30000 * 8, 99);
-y = ones(30000 * 8, 2);
+
 start = 1;
 win_len = 10;
     
 % for angle = 1:8
-angle=1
-selected_angle = selected_neurons(:,1);
+angle = 8;
+selected_angle = selected_neurons(:,angle);
+indices = find(selected_angle==1);
+
+X = ones(30000 * 8, length(indices));
+y = ones(30000 * 8, 2);
+
 for trial = 1:max(size(training_data))
-    for neuron_idx = 1:sum(selected_angle):
+    for idx = 1:length(indices)
+        neuron = indices(idx);
         spike_train = data(trial, angle).spikes(neuron, 300-win_len:end-100);
         smooth_fr = zeros(1, length(spike_train));
         for i = win_len:length(spike_train)
@@ -50,8 +55,7 @@ end
 % end
     X = X(1:start-1, :);
     y = y(1:start-1, :);
-    disp(size(X))
-    disp(size(y))
+
 %     [beta,Sigma,E,CovB,logL] = mvregress(y, X);
 %     [b1,bint1,r1,rint1,stats1] = regress(y(:,1), X);
 %     [b2,bint2,r2,rint2,stats2] = regress(y(:,2), X);
@@ -60,11 +64,15 @@ end
 %     model2 = fitrkernel(X,y(:,2));
 
     disp('training model 1')
-    model1 = fitrgp(X(:,90:end),y(:,1));
+    tic;
+    model1 = fitrgp(X,y(:,1));
+    toc
     disp('complete')
     
     disp('training model 2')
-    model2 = fitrgp(X(:,90:end),y(:,2));
+    tic;
+    model2 = fitrgp(X,y(:,2));
+    toc
     disp('complete')
     
 %     model1 = fitsrsvm(X,y(:,1),'KernelFunction','gaussian','KernelScale','auto',...
@@ -72,7 +80,7 @@ end
 %     model2 = fitrsvm(X,y(:,2),'KernelFunction','gaussian','KernelScale','auto',...
 %     'Standardize',true);
     
-% 	modelParameters = {model1, model2};
+	modelParameters = {model1, model2, selected_neurons,angle};
 %     modelParameters = [b1,b2];
   
 end

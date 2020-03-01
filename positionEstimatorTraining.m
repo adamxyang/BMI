@@ -25,7 +25,7 @@ start = 1;
 win_len = 10;
     
 % for angle = 1:8
-angle = 5;
+angle = 8;
 selected_angle = selected_neurons(:,angle);
 indices = find(selected_angle==1);
 
@@ -41,15 +41,12 @@ for trial = 1:max(size(training_data))
             smooth_fr(i) = mean(spike_train(1, i-win_len+1:i));
         end
         smooth_fr = smooth_fr(win_len:end)';
-%             X(start:start+length(t0_)-1, 1+c+c:2+c+c) = [t0_, t0_.*t0_*10];
-        X(start:start+length(smooth_fr)-1, 1+neuron) = smooth_fr;
-        a0 = data(trial, angle).handPos(1:2, 299:end-100)';
-        a1 = data(trial, angle).handPos(1:2, 300:end-99)';
-        y(start:start+length(smooth_fr)-1, :) = a1 - a0;
-%             target = data(t,d).r_theta(1:2,300:end-99)';
-%             y(start:start+length(t0_)-1, :) = target;
+        X(start:start+length(smooth_fr)-1, idx) = smooth_fr;
     end
-%         y(start:start+length(t0_)-1, :) = data.trial(t, d).r_theta();
+    y_prev = data(trial, angle).handPos(1:2, 299:end-100)';
+    y_now = data(trial, angle).handPos(1:2, 300:end-99)';
+    y(start:start+length(smooth_fr)-1, :) = y_now - y_prev;
+    
     start = start + length(smooth_fr);
 end
 % end
