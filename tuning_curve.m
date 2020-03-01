@@ -1,7 +1,7 @@
-function [selected_neurons] = tuning_curve(training_data, scale, thres)
+function [selected_neurons] = tuning_curve(training_data, scale, thres, win_len)
     data = training_data;
 
-    win_len = 30;
+    win_len = win_len;
     avg_fr = zeros(98,8);
 
     for neuron = 1:98

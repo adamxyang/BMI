@@ -1,4 +1,4 @@
-function [x, y] = positionEstimator(test_data, modelParameters)
+function [x, y] = positionEstimator(test_data, modelParameters, win_len)
 
   % **********************************************************
   %
@@ -47,7 +47,7 @@ function [x, y] = positionEstimator(test_data, modelParameters)
     selected_angle = selected_neurons(:,angle);
     indices = find(selected_angle==1.);
     
-    win_len = 20;
+    win_len = win_len;
     smooth_fr = zeros(length(indices), length(data.spikes));
     for idx = 1:length(indices)
         neuron = indices(idx);
