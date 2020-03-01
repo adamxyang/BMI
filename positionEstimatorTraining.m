@@ -73,7 +73,7 @@ end
 %     model2 = fitrsvm(X,y(:,2),'KernelFunction','gaussian','KernelScale','auto',...
 %     'Standardize',true);
     
-% 	modelParameters = {model1, model2};
+	modelParameters = {model1, model2};
 %     modelParameters = [b1,b2];
   
 end
