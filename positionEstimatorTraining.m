@@ -26,7 +26,7 @@ start = 1;
 win_len = 10;
     
 % for angle = 1:8
-angle=1
+angle = 1;
 selected_angle = selected_neurons(:,1);
 indices = find(selected_angle==1);
 for trial = 1:max(size(training_data))
@@ -52,8 +52,7 @@ end
 % end
     X = X(1:start-1, :);
     y = y(1:start-1, :);
-    disp(size(X))
-    disp(size(y))
+
 %     [beta,Sigma,E,CovB,logL] = mvregress(y, X);
 %     [b1,bint1,r1,rint1,stats1] = regress(y(:,1), X);
 %     [b2,bint2,r2,rint2,stats2] = regress(y(:,2), X);
