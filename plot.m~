@@ -1,0 +1,5 @@
+data = load('monkeydata_training.mat');
+
+trial = 1
+angle = 1
+y = data.trial(trial,angle).handPos(

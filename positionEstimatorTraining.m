@@ -22,7 +22,7 @@ function [modelParameters] = positionEstimatorTraining(training_data, angle, sca
 
 
     start = 1;
-    win_len = 10;
+    win_len = 30;
 
     % for angle = 1:8
     angle = angle;
