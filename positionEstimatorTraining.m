@@ -25,7 +25,7 @@ function [modelParameters] = positionEstimatorTraining(training_data)
     win_len = 10;
 
     % for angle = 1:8
-    angle = 8;
+    angle = 4;
     selected_angle = selected_neurons(:,angle);
     indices = find(selected_angle==1);
 
@@ -80,6 +80,5 @@ function [modelParameters] = positionEstimatorTraining(training_data)
     %     'Standardize',true);
 
     modelParameters = {model1, model2, selected_neurons,angle};
-    %     modelParameters = [b1,b2];
 
 end
