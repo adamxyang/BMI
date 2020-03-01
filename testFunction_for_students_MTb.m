@@ -67,7 +67,7 @@ for tr=1:size(testData,1)
     end
 end
 
-legend('Decoded Position', 'Actual Position')
+% legend('Decoded Position', 'Actual Position')
 
 RMSE = sqrt(meanSqError/n_predictions) 
 
