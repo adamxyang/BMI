@@ -45,10 +45,10 @@ function [modelParameters] = positionEstimatorTraining(training_data)
         end
         y_prev = data(trial, angle).handPos(1:2, 299:end-100)';
         y_now = data(trial, angle).handPos(1:2, 300:end-99)';
-        y(start:start+length(smooth_fr)-1, :) = y_now - y_prev;
+        y(start:start+length(spike_train)-1, :) = y_now - y_prev;
     %     y(start:start+length(smooth_fr)-1, :) = data(trial, angle).handPos(1:2, 300:end-99)';
 
-        start = start + length(smooth_fr);
+        start = start + length(spike_train);
     end
     % end
     X = X(1:start-1, :);
