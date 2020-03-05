@@ -42,15 +42,9 @@ function [x, y] = positionEstimator(test_data, modelParameters, win_len)
   %     current position of the hand
     data = test_data;
     
-    selected_neurons = modelParameters{3};
-    angle = modelParameters{4};
-    selected_angle = selected_neurons(:,angle);
-    indices = find(selected_angle==1.);
-    
     win_len = win_len;
-    smooth_fr = zeros(length(indices), length(data.spikes));
-    for idx = 1:length(indices)
-        neuron = indices(idx);
+    smooth_fr = zeros(98, length(data.spikes));
+    for neuron = 1:98
         spike_train = data.spikes(neuron, :);
         for i = 1:win_len
             smooth_fr(idx, i) = sum(spike_train(1, 1:i)) / win_len;
@@ -60,8 +54,18 @@ function [x, y] = positionEstimator(test_data, modelParameters, win_len)
         end
     end
     
-    x = cumsum(modelParameters{1}.predict(smooth_fr'))';
-    y = cumsum(modelParameters{2}.predict(smooth_fr'))';
+    classifier = modelParameters{end};
+    angle = classifier.predict(smooth_fr');
+
+    selected_neurons = modelParameters{angle}{3};
+    selected_angle = selected_neurons(:,angle);
+    indices = [find(selected_angle==1.)];
+    
+    x = cumsum(modelParameters{angle}{1}' * smooth_fr);
+    y = cumsum(modelParameters{angle}{2}' * smooth_fr);
+    
+%     x = cumsum(modelParameters{1}.predict(smooth_fr'))';
+%     y = cumsum(modelParameters{2}.predict(smooth_fr'))';
 
 %     x = modelParameters{1}.predict(smooth_fr')';
 %     y = modelParameters{2}.predict(smooth_fr')';
