@@ -60,8 +60,11 @@ function [x, y] = positionEstimator(test_data, modelParameters, win_len)
         end
     end
     
-    x = cumsum(modelParameters{1}.predict(smooth_fr'))';
-    y = cumsum(modelParameters{2}.predict(smooth_fr'))';
+    x = cumsum(modelParameters{1}' * smooth_fr);
+    y = cumsum(modelParameters{2}' * smooth_fr);
+    
+%     x = cumsum(modelParameters{1}.predict(smooth_fr'))';
+%     y = cumsum(modelParameters{2}.predict(smooth_fr'))';
 
 %     x = modelParameters{1}.predict(smooth_fr')';
 %     y = modelParameters{2}.predict(smooth_fr')';

@@ -34,7 +34,8 @@ modelParameters = positionEstimatorTraining(trainingData, angle, scale, thres, w
 for tr=1:size(testData,1)
     display(['Decoding block ',num2str(tr),' out of ',num2str(size(testData,1))]);
     pause(0.001)
-    for direc=randperm(8) 
+    tic;
+%     for direc=randperm(8) 
         decodedHandPos = [];
         direc = angle;
         times=320:20:size(testData(tr,direc).spikes,2);
@@ -66,7 +67,8 @@ for tr=1:size(testData,1)
 %         plot(testData(tr,direc).handPos(1,times),testData(tr,direc).handPos(2,times),'b')
         scatter(decodedHandPos(1,:),decodedHandPos(2,:), '.','r');
         scatter(testData(tr,direc).handPos(1,times),testData(tr,direc).handPos(2,times),'.','b')
-    end
+%     end
+    toc
 end
 
 % legend('Decoded Position', 'Actual Position')
