@@ -30,6 +30,8 @@ function [modelParameters] = positionEstimatorTraining(training_data, angle, sca
     indices = find(selected_angle==1.);
     disp('indices')
     disp(indices)
+    disp('number of selected neurons:')
+    disp(length(indices))
 
     X = ones(30000 * 8, length(indices));
     y = ones(30000 * 8, 2);
