@@ -66,16 +66,16 @@ function [modelParameters] = positionEstimatorTraining(training_data, angle, sca
     disp('training model 1')
     tic;
 %     model1 = fitrgp(X,y(:,1));
-%     model1 = fitlm(X, y(:,1));
-    model1 = fitrkernel(X, y(:,1));
+    model1 = fitlm(X, y(:,1));
+%     model1 = fitrkernel(X, y(:,1));
     toc
     disp('complete')
 
     disp('training model 2')
     tic;
 %     model2 = fitrgp(X,y(:,2));
-%     model2 = fitlm(X,y(:,2));
-    model2 = fitrkernel(X, y(:,2));
+    model2 = fitlm(X,y(:,2));
+%     model2 = fitrkernel(X, y(:,2));
     toc
     disp('complete')
 
