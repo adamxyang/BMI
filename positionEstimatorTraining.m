@@ -98,7 +98,7 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
         
     end
     tic;
-    classifier = fitcecoc(X,y);
+    classifier = fitcecoc(X',y');
     modelParameters{end} = classifier;
     toc
 end
