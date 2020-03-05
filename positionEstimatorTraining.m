@@ -73,8 +73,8 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
         tic;
 %         [b1,bint1,r1,rint1,stats1] = regress(y(:,1), X);
     % %     model1 = fitrgp(X,y(:,1));
-%         model1 = fitlm(X, y(:,1));
-        model1 = fitrkernel(X, y(:,1));
+        model1 = fitlm(X, y(:,1));
+%         model1 = fitrkernel(X, y(:,1));
         toc
         disp('complete')
 
@@ -82,8 +82,8 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
         tic;
 %         [b2,bint2,r2,rint2,stats2] = regress(y(:,2), X);
     % %     model2 = fitrgp(X,y(:,2));
-    %     model2 = fitlm(X,y(:,2));
-        model2 = fitrkernel(X, y(:,2));
+        model2 = fitlm(X,y(:,2));
+%         model2 = fitrkernel(X, y(:,2));
         toc
         disp('complete')
 
