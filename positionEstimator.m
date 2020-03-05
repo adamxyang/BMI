@@ -61,11 +61,11 @@ function [x, y] = positionEstimator(test_data, modelParameters, win_len)
     selected_angle = selected_neurons(:,angle);
     indices = [find(selected_angle==1.)];
     
-    x = cumsum(modelParameters{angle}{1}' * smooth_fr);
-    y = cumsum(modelParameters{angle}{2}' * smooth_fr);
+%     x = cumsum(modelParameters{angle}{1}' * smooth_fr);
+%     y = cumsum(modelParameters{angle}{2}' * smooth_fr);
     
-%     x = cumsum(modelParameters{1}.predict(smooth_fr'))';
-%     y = cumsum(modelParameters{2}.predict(smooth_fr'))';
+    x = cumsum(modelParameters{angle}{1}.predict(smooth_fr'))';
+    y = cumsum(modelParameters{angle}{2}.predict(smooth_fr'))';
 
 %     x = modelParameters{1}.predict(smooth_fr')';
 %     y = modelParameters{2}.predict(smooth_fr')';

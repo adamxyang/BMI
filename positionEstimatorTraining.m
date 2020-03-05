@@ -71,19 +71,19 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
 
         disp('training model 1')
         tic;
-        [b1,bint1,r1,rint1,stats1] = regress(y(:,1), X);
+%         [b1,bint1,r1,rint1,stats1] = regress(y(:,1), X);
     % %     model1 = fitrgp(X,y(:,1));
-    %     model1 = fitlm(X, y(:,1));
-    % %     model1 = fitrkernel(X, y(:,1));
+%         model1 = fitlm(X, y(:,1));
+        model1 = fitrkernel(X, y(:,1));
         toc
         disp('complete')
 
         disp('training model 2')
         tic;
-        [b2,bint2,r2,rint2,stats2] = regress(y(:,2), X);
+%         [b2,bint2,r2,rint2,stats2] = regress(y(:,2), X);
     % %     model2 = fitrgp(X,y(:,2));
     %     model2 = fitlm(X,y(:,2));
-    % %     model2 = fitrkernel(X, y(:,2));
+        model2 = fitrkernel(X, y(:,2));
         toc
         disp('complete')
 
@@ -92,13 +92,13 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
         %     model2 = fitrsvm(X,y(:,2),'KernelFunction','gaussian','KernelScale','auto',...
         %     'Standardize',true);
 
-    %     modelParameters = {model1, model2, selected_neurons,angle};
+        modelParameters = {model1, model2, selected_neurons};
     %     modelParameters = {, selected_neurons,angle};
-        modelParameters{angle} = {b1,b2,selected_neurons};
+%         modelParameters{angle} = {b1,b2,selected_neurons};
         
     end
     tic;
-    classifier = fitcecoc(X',y');
+    classifier = fitcecoc(X_all,y_all);
     modelParameters{end} = classifier;
     toc
 end
