@@ -56,6 +56,7 @@ function [x, y] = positionEstimator(test_data, modelParameters, win_len)
     
     classifier = modelParameters{end};
     angle = classifier.predict(smooth_fr');
+    angle = majorityvote(angle);
     disp('predicted angle')
     disp(angle)
 
