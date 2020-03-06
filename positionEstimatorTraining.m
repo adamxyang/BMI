@@ -68,7 +68,7 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
 %         y_all(total_length:total_length+start-2,:) = y_all(total_length:total_length+start-2,1) * angle;
 %         total_length = total_length + start;
 
-        X_all(total_length:total_length+1,:) = X(1,:);
+        X_all(total_length:total_length+1,:) = X(1:2,:);
         y_all(total_length:total_length+1,:) = y_all(total_length:total_length+1,1) * angle;
         total_length = total_length + 1;
         
