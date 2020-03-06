@@ -110,7 +110,10 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
 %         modelParameters{angle} = {b1,b2,selected_neurons};
         
     end
+    
     tic;
+    X_all = X_all(1:total_length,:);
+    y_all = y_all(1:total_length,:);
     classifier = fitcecoc(X_all,y_all);
     modelParameters{end+1} = classifier;
     toc
