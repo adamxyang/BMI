@@ -27,7 +27,15 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
     X_all = ones(300000*8, 98);  % for classification
     y_all = ones(300000*8,1);
     total_length = 1;
+    
     for angle = 1:8
+        
+        x_trial = NaN;
+        y_trial = NaN;
+        positionX = NaN;
+        positionY = NaN;
+        spike_angle = zeros(1,1);
+        
         start = 1;
         
         selected_angle = selected_neurons(:,angle);
@@ -41,27 +49,56 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
 
         X = ones(30000 * 8, 98);
         y = ones(30000 * 8, 2);
+        window_accu_length = 0;
 
         for trial = 1:max(size(training_data))
-            for neuron = 1:98
-                spike_train = data(trial, angle).spikes(neuron, 300-win_len:end-100);
-                smooth_fr = zeros(1, length(spike_train));
-                for i = win_len:length(spike_train)
-                    smooth_fr(i) = mean(spike_train(1, i-win_len+1:i));
-                end
-                smooth_fr = smooth_fr(win_len:end)';
-                X(start:start+length(smooth_fr)-1, neuron) = smooth_fr;
-            end
-            y_prev = data(trial, angle).handPos(1:2, 299:end-100)';
-            y_now = data(trial, angle).handPos(1:2, 300:end-99)';
-            y(start:start+length(smooth_fr)-1, :) = y_now - y_prev;
-        %     y(start:start+length(smooth_fr)-1, :) = data(trial, angle).handPos(1:2, 300:end-99)';
+            timelength = length(data(trial, angle).spikes(1, 300-win_len:end-100));
+            windows = idivide(timelength, win_len, 'ceil');
+            window_start_timestep = 300-win_len;  
+            
+            timelength = length(data(trial, angle).spikes(1, 300-win_len:end-100));
+            windows = idivide(timelength, win_len, 'ceil');
+            window_start_timestep = 300-win_len;      
 
-            start = start + length(smooth_fr);
+            for window = 1: windows    
+                for neuron = 1:98
+                    spike_train = data(trial, angle).spikes(neuron, 300-win_len:end-100);
+                    spike_sum = 0;
+                    for t = window_start_timestep : window_start_timestep + win_len
+                        if t < timelength
+                            if data(trial, angle).spikes(neuron, t)
+                                spike_sum = spike_sum + 1; 
+                            end
+                        end
+                    end 
+                    spike_angle(window_accu_length+window, neuron) = spike_sum;
+                end
+
+                x_trial(window_accu_length+window) = data(trial, angle).handPos(1,window_start_timestep + win_len)- data(trial, angle).handPos(1,window_start_timestep);
+                y_trial(window_accu_length+window) = data(trial, angle).handPos(1,window_start_timestep + win_len)- data(trial, angle).handPos(1,window_start_timestep);
+                window_start_timestep = window_start_timestep + win_len;
+            end
+            window_accu_length = window_accu_length+windows;
         end
+            
+        smooth_fr = zeros(1, length(spike_train));
+        for i = win_len:length(spike_train)
+            smooth_fr(i) = mean(spike_train(1, i-win_len+1:i));
+        end
+        smooth_fr = smooth_fr(win_len:end)';
+        X(start:start+length(smooth_fr)-1, neuron) = smooth_fr;
+
+        y_prev = data(trial, angle).handPos(1:2, 299:end-100)';
+        y_now = data(trial, angle).handPos(1:2, 300:end-99)';
+        y(start:start+length(smooth_fr)-1, :) = y_now - y_prev;
+    %     y(start:start+length(smooth_fr)-1, :) = data(trial, angle).handPos(1:2, 300:end-99)';
+
+        start = start + length(smooth_fr);
+
         % end
         X = X(1:start-1, :);
         y = y(1:start-1, :);
+
         
 %         X_all(1+(start-1)*(angle-1):(start-1)*angle,:) = X;
 %         y_all(1+(start-1)*(angle-1):(start-1)*angle,:) = y_all(1+(start-1)*(angle-1):(start-1)*angle,:)*angle;
@@ -69,6 +106,7 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
         X_all(total_length:total_length+start-2,:) = X;
         y_all(total_length:total_length+start-2,:) = y_all(total_length:total_length+start-2,1) * angle;
         total_length = total_length + start-1;
+
 
 %         X_all(total_length:total_length+1,:) = X(1:2,:);
 %         y_all(total_length:total_length+1,:) = y_all(total_length:total_length+1,1) * angle;

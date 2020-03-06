@@ -42,9 +42,26 @@ function [x, y] = positionEstimator(test_data, modelParameters, win_len)
   %     current position of the hand
     data = test_data;
     
-    win_len = win_len;
+    window_start_timestep = length(data.spikes) - 20; %fixed 20 step window
+    
+    spike_predicted_angle = zeros(1,1);
+    
+    for neuron = 1:length(indices)
+        spike_train = data.spikes(neuron, :);       
+        spike_sum = 0;
+        for t = window_start_timestep : window_start_timestep + win_len
+            if t < length(data.spikes)
+                if spike_train(neuron, t)
+                    spike_sum = spike_sum + 1; 
+                end
+            end
+        end    
+        spike_predicted_angle(1,neuron) = spike_sum; % 1 means only '1 window' with 20 timesteps
+    end
+    
     smooth_fr = zeros(98, length(data.spikes));
     for neuron = 1:98
+        neuron = indices(neuron);
         spike_train = data.spikes(neuron, :);
         for i = 1:win_len
             smooth_fr(neuron, i) = sum(spike_train(1, 1:i)) / win_len;
@@ -53,6 +70,8 @@ function [x, y] = positionEstimator(test_data, modelParameters, win_len)
             smooth_fr(neuron, i) = mean(spike_train(1, i-win_len:i));
         end
     end
+    
+    smooth_fr = smooth_fr(indices,:);
     
     classifier = modelParameters{end};
     angle = classifier.predict(smooth_fr');
