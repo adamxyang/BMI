@@ -105,7 +105,7 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
         %     model2 = fitrsvm(X,y(:,2),'KernelFunction','gaussian','KernelScale','auto',...
         %     'Standardize',true);
 
-        modelParameters{angle} = {model1, model2, selected_neurons};
+        modelParameters{angle} = {model1, model2, [selected_neurons]};
     %     modelParameters = {, selected_neurons,angle};
 %         modelParameters{angle} = {b1,b2,selected_neurons};
         
