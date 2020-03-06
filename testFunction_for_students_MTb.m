@@ -4,7 +4,7 @@
 % the relevant modelParameters, and then calls the function
 % "positionEstimator" to decode the trajectory. 
 
-function RMSE = testFunction_for_students_MTb(teamName)   % teamName
+function RMSE = testFunction_for_students_MTb(scale,thres, win_len)   % teamName
 
 load monkeydata_training.mat
 
@@ -12,7 +12,7 @@ load monkeydata_training.mat
 rng(2013);
 ix = randperm(length(trial));
 
-% % addpath(teamName);
+% addpath(teamName);
 
 % Select training and testing data (you can choose to split your data in a different way if you wish)
 trainingData = trial(ix(1:90),:);
@@ -29,16 +29,15 @@ axis square
 grid
 
 % Train Model
-tic;
-modelParameters = positionEstimatorTraining(trainingData);
-toc
+modelParameters = positionEstimatorTraining(trainingData, scale, thres, win_len);
 
 for tr=1:size(testData,1)
     display(['Decoding block ',num2str(tr),' out of ',num2str(size(testData,1))]);
     pause(0.001)
+    tic;
     for direc=randperm(8) 
         decodedHandPos = [];
-
+%         direc = angle;
         times=320:20:size(testData(tr,direc).spikes,2);
         
         for t=times
@@ -49,10 +48,10 @@ for tr=1:size(testData,1)
             past_current_trial.startHandPos = testData(tr,direc).handPos(1:2,1); 
             
             if nargout('positionEstimator') == 3
-                [decodedPosX, decodedPosY, newParameters] = positionEstimator(past_current_trial, modelParameters);
+                [decodedPosX, decodedPosY, newParameters] = positionEstimator(past_current_trial, modelParameters, win_len);
                 modelParameters = newParameters;
             elseif nargout('positionEstimator') == 2
-                [decodedPosX, decodedPosY] = positionEstimator(past_current_trial, modelParameters);
+                [decodedPosX, decodedPosY] = positionEstimator(past_current_trial, modelParameters, win_len);
             end
             
             decodedPos = [decodedPosX; decodedPosY];
@@ -64,12 +63,15 @@ for tr=1:size(testData,1)
         end
         n_predictions = n_predictions+length(times);
         hold on
-        plot(decodedHandPos(1,:),decodedHandPos(2,:), 'r');
-        plot(testData(tr,direc).handPos(1,times),testData(tr,direc).handPos(2,times),'b')
-    end
+%         plot(decodedHandPos(1,:),decodedHandPos(2,:), 'r');
+%         plot(testData(tr,direc).handPos(1,times),testData(tr,direc).handPos(2,times),'b')
+        scatter(decodedHandPos(1,:),decodedHandPos(2,:), '.','r');
+        scatter(testData(tr,direc).handPos(1,times),testData(tr,direc).handPos(2,times),'.','b')
+%     end
+    toc
 end
 
-legend('Decoded Position', 'Actual Position')
+% legend('Decoded Position', 'Actual Position')
 
 RMSE = sqrt(meanSqError/n_predictions) 
 
