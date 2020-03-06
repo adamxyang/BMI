@@ -36,6 +36,8 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
         disp(indices)
         disp('number of selected neurons:')
         disp(length(indices))
+        disp('angle')
+        disp(angle)
 
         X = ones(30000 * 8, 98);
         y = ones(30000 * 8, 2);
