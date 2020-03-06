@@ -56,6 +56,8 @@ function [x, y] = positionEstimator(test_data, modelParameters, win_len)
     
     classifier = modelParameters{end};
     angle = classifier.predict(smooth_fr');
+    disp('predicted angle')
+    disp(angle)
 
     selected_neurons = modelParameters{angle}{3};
     selected_angle = selected_neurons(:,angle);
