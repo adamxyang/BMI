@@ -3,7 +3,6 @@
 % This function first calls the function "positionEstimatorTraining" to get
 % the relevant modelParameters, and then calls the function
 % "positionEstimator" to decode the trajectory. 
-
 function RMSE = testFunction_for_students_MTb(scale,thres, win_len)   % teamName
 
 load monkeydata_training.mat
@@ -28,6 +27,8 @@ hold on
 axis square
 grid
 
+
+
 % Train Model
 modelParameters = positionEstimatorTraining(trainingData, scale, thres, win_len);
 
@@ -41,6 +42,7 @@ for tr=1:size(testData,1)
         times=320:20:size(testData(tr,direc).spikes,2);
         
         for t=times
+            %disp(t)
             past_current_trial.trialId = testData(tr,direc).trialId;
             past_current_trial.spikes = testData(tr,direc).spikes(:,1:t); 
             past_current_trial.decodedHandPos = decodedHandPos;
@@ -55,18 +57,21 @@ for tr=1:size(testData,1)
             end
             
             decodedPos = [decodedPosX; decodedPosY];
-%             decodedHandPos = [decodedHandPos decodedPos];
-            decodedHandPos = decodedPos;
+            decodedHandPos = [decodedHandPos decodedPos];
+            %decodedHandPos = decodedPos;
             
-            meanSqError = meanSqError + norm(testData(tr,direc).handPos(1:2,1:t) - decodedPos)^2;
+            
+            %disp(size(testData(tr,direc).handPos(1:2,1:t)))
+            %disp(size( decodedHandPos ))
+            meanSqError = meanSqError + norm(testData(tr,direc).handPos(1:2,t) - decodedPos)^2;
             
         end
         n_predictions = n_predictions+length(times);
         hold on
-%         plot(decodedHandPos(1,:),decodedHandPos(2,:), 'r');
-%         plot(testData(tr,direc).handPos(1,times),testData(tr,direc).handPos(2,times),'b')
-        scatter(decodedHandPos(1,:),decodedHandPos(2,:), '.','r');
+        scatter(decodedHandPos(1,:),decodedHandPos(2,:),'.','r');
         scatter(testData(tr,direc).handPos(1,times),testData(tr,direc).handPos(2,times),'.','b')
+        %scatter(decodedHandPos(1,:),decodedHandPos(2,:), '.','r');
+        %scatter(testData(tr,direc).handPos(1,times),testData(tr,direc).handPos(2,times),'.','b')
 %     end
         toc
 end
