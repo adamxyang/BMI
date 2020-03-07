@@ -51,9 +51,6 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
             window_accu_length = window_accu_length+num_windows;
         end
         
-        disp('number of selected neurons')
-        disp(length(indices))
-        
         disp('training model 1')
         tic;
         model1 = fitlm(spike_angle, distanceX);
