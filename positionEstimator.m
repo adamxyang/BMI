@@ -83,14 +83,24 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
         spike_predicted_angle(1,idx) = spike_sum; % 1 means only '1 window' with 20 timesteps
     end
     
-    if  (length(test_data.spikes(1,:))-300)/win_len <= 1
-        x_start = test_data.startHandPos(1);
-        y_start = test_data.startHandPos(2);
-    else
+%     if  (length(test_data.spikes(1,:))-300)/win_len <= 1
+%         x_start = test_data.startHandPos(1);
+%         y_start = test_data.startHandPos(2);
+%     else
+%         last_position = test_data.decodedHandPos(:,end);
+%         x_start = last_position(1);
+%         y_start = last_position(2);
+%     end
+
+    if length(test_data.decodedHandPos) > 0
         last_position = test_data.decodedHandPos(:,end);
         x_start = last_position(1);
         y_start = last_position(2);
+    else
+        x_start = test_data.startHandPos(1);
+        y_start = test_data.startHandPos(2);
     end
+   
 
     Xvelocity =  modelParameters{angle}{1}.predict(spike_predicted_angle) ;
     Yvelocity =  modelParameters{angle}{2}.predict(spike_predicted_angle) ;
