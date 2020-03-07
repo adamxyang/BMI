@@ -68,7 +68,7 @@ for tr=1:size(testData,1)
         scatter(decodedHandPos(1,:),decodedHandPos(2,:), '.','r');
         scatter(testData(tr,direc).handPos(1,times),testData(tr,direc).handPos(2,times),'.','b')
 %     end
-    toc
+        toc
 end
 
 % legend('Decoded Position', 'Actual Position')
