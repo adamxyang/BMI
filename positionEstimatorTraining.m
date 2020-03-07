@@ -4,7 +4,7 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
 
     % data = modify_data(training_data);
 
-    win_len = 20;    
+%     win_len = win_len;    
     X_all = ones(300000*8, 98);  % for classification
     y_all = ones(300000*8,1);
     total_length = 1;
