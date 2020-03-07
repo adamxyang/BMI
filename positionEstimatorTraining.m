@@ -31,7 +31,7 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
             windows = ceil(timelength./win_len);
             window_start_timestep = 300-win_len;      
 
-            for window = 1: windows    
+            for window = 1:windows    
                 for neuron = 1:length(indices)
                     spike_sum = 0;
                     for t = window_start_timestep -80 : window_start_timestep + win_len -80
@@ -53,13 +53,15 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
         
         disp('training model 1')
         tic;
-        model1 = fitrkernel(spike_angle, distanceX);
+        model1 = fitlm(spike_angle, distanceX);
+%         model1 = fitrkernel(spike_angle, distanceX);
         toc
         %disp('complete')
         
         disp('training model 2')
         tic;
-        model2 = fitrkernel(spike_angle,distanceY);
+        model2 = fitlm(spike_angle,distanceY);
+%         model2 = fitrkernel(spike_angle,distanceY);
         toc
         disp('complete')
 
@@ -88,6 +90,7 @@ response_2 = NaN;
             end
         end
     end
+    tic;
     classifier = fitcknn(spike_count,response_2,'NumNeighbors',10,'NSMethod','exhaustive','Distance','cosine');
     modelParameters{end+1} = classifier;
     toc
