@@ -60,8 +60,8 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
     classifier = modelParameters{end};
     angle = classifier.predict(new);
      
-    disp('predicted angle')
-    disp(angle)
+%     disp('predicted angle')
+%     disp(angle)
 
     selected_neurons = modelParameters{angle}(3);
     selected_neurons = selected_neurons{1};
