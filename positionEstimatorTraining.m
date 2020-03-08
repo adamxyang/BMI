@@ -48,7 +48,7 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
                         t_end = timelength - 80;
                     end
 
-                    spike_sum = sum(data.spikes(neuron,t_start:t_end));
+                    spike_sum = sum(data(trial,angle).spikes(neuron,t_start:t_end));
                     spike_angle(window_accu_length+window, neuron) = spike_sum;
                 end
 
