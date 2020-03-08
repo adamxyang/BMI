@@ -76,13 +76,22 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
             neuron = indices(idx);
             spike_train = data.spikes(neuron, :);       
             spike_sum = 0;
-            for t = window_start_timestep + (window-1)*win_len - 80 : window_start_timestep + window*win_len - 80
-                if t < length(data.spikes)
-                    if spike_train(t)
-                        spike_sum = spike_sum + 1; 
-                    end
-                end
-            end    
+            t_start = window_start_timestep + (window-1)*win_len - 80;
+            if window_start_timestep + window*win_len - 80 < length(data.spikes)
+                t_end = window_start_timestep + window*win_len - 80;
+            else
+                t_end = length(data.spikes);
+            end
+            
+            spike_sum = sum(data.spikes(neuron,t_start:t_end);
+            
+%             for t = window_start_timestep + (window-1)*win_len - 80 : window_start_timestep + window*win_len - 80
+%                 if t < length(data.spikes)
+%                     if spike_train(t)
+%                         spike_sum = spike_sum + 1; 
+%                     end
+%                 end
+%             end    
             spike_predicted_angle(1,idx) = spike_sum; % 1 means only '1 window' with 20 timesteps
         end
         
