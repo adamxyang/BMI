@@ -51,6 +51,8 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
             window_accu_length = window_accu_length+num_windows;
         end
         
+        disp('angle')
+        disp(angle)
         disp('number of selected neurons')
         disp(length(indices))
         
@@ -60,7 +62,6 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
 %         model1 = fitrkernel(spike_angle, distanceX);
         model1 = fitrgp(spike_angle, distanceX);
         toc
-        %disp('complete')
         
         disp('training model 2')
         tic;
@@ -68,7 +69,6 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
 %         model2 = fitrkernel(spike_angle,distanceY);
         model2 = fitrgp(spike_angle,distanceY);
         toc
-        disp('complete')
 
         modelParameters{angle} = {model1, model2, selected_neurons};
        
