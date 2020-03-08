@@ -69,6 +69,7 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
     indices = [find(selected_angle==1.)];
     
     num_windows = 20/win_len;
+    total_
     
     for window = 1:num_windows
         for idx = 1:length(indices)
@@ -84,6 +85,7 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
             end    
             spike_predicted_angle(1,idx) = spike_sum; % 1 means only '1 window' with 20 timesteps
         end
+        window_start_timestep
 
     %     if  (length(test_data.spikes(1,:))-300)/win_len <= 1
     %         x_start = test_data.startHandPos(1);
