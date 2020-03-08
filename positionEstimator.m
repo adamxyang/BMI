@@ -98,7 +98,7 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
     %         y_start = last_position(2);
     %     end
 
-        if length(test_data.decodedHandPos) > 0
+        if length(test_data.decodedHandPos) > 0 & window == 1
             last_position = test_data.decodedHandPos(:,end);
             x_start = last_position(1);
             y_start = last_position(2);
