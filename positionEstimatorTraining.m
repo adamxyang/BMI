@@ -42,10 +42,10 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
 %                         end
 %                     end 
                     t_start = window_start_timestep - 80;
-                    if window_start_timestep - 80 < time_length - 80
+                    if window_start_timestep - 80 < timelength - 80
                         t_end = window_start_timestep + window*win_len - 80;
                     else
-                        t_end = time_length - 80;
+                        t_end = timelength - 80;
                     end
 
                     spike_sum = sum(data.spikes(neuron,t_start:t_end));
