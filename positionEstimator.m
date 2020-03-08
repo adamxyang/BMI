@@ -42,7 +42,7 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
   %     current position of the hand
     data = test_data;
     
-    window_start_timestep = length(data.spikes) - win_len; %fixed 20 step window
+    window_start_timestep = length(data.spikes) - 20; %fixed 20 step window
     
     spike_predicted_angle = zeros(1,1);
         
@@ -68,45 +68,50 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
     selected_angle = selected_neurons(:,angle);
     indices = [find(selected_angle==1.)];
     
+    num_windows = 20/win_len;
     
-    for idx = 1:length(indices)
-        neuron = indices(idx);
-        spike_train = data.spikes(neuron, :);       
-        spike_sum = 0;
-        for t = window_start_timestep -80 : window_start_timestep + win_len -80
-            if t < length(data.spikes)
-                if spike_train(t)
-                    spike_sum = spike_sum + 1; 
+    for window = 1:num_windows
+        for idx = 1:length(indices)
+            neuron = indices(idx);
+            spike_train = data.spikes(neuron, :);       
+            spike_sum = 0;
+            for t = window_start_timestep -80 : window_start_timestep + win_len -80
+                if t < length(data.spikes)
+                    if spike_train(t)
+                        spike_sum = spike_sum + 1; 
+                    end
                 end
-            end
-        end    
-        spike_predicted_angle(1,idx) = spike_sum; % 1 means only '1 window' with 20 timesteps
-    end
-    
-%     if  (length(test_data.spikes(1,:))-300)/win_len <= 1
-%         x_start = test_data.startHandPos(1);
-%         y_start = test_data.startHandPos(2);
-%     else
-%         last_position = test_data.decodedHandPos(:,end);
-%         x_start = last_position(1);
-%         y_start = last_position(2);
-%     end
+            end    
+            spike_predicted_angle(1,idx) = spike_sum; % 1 means only '1 window' with 20 timesteps
+        end
 
-    if length(test_data.decodedHandPos) > 0
-        last_position = test_data.decodedHandPos(:,end);
-        x_start = last_position(1);
-        y_start = last_position(2);
-    else
-        x_start = test_data.startHandPos(1);
-        y_start = test_data.startHandPos(2);
-    end
-   
+    %     if  (length(test_data.spikes(1,:))-300)/win_len <= 1
+    %         x_start = test_data.startHandPos(1);
+    %         y_start = test_data.startHandPos(2);
+    %     else
+    %         last_position = test_data.decodedHandPos(:,end);
+    %         x_start = last_position(1);
+    %         y_start = last_position(2);
+    %     end
 
-    Xvelocity =  modelParameters{angle}{1}.predict(spike_predicted_angle) ;
-    Yvelocity =  modelParameters{angle}{2}.predict(spike_predicted_angle) ;
+        if length(test_data.decodedHandPos) > 0
+            last_position = test_data.decodedHandPos(:,end);
+            x_start = last_position(1);
+            y_start = last_position(2);
+        elseif window == 1
+            x_start = test_data.startHandPos(1);
+            y_start = test_data.startHandPos(2);
+        else
+            x_start = X;
+            y_start = Y;
+        end
 
-    X = x_start + Xvelocity;
-    Y = y_start + Yvelocity;
+
+        Xvelocity =  modelParameters{angle}{1}.predict(spike_predicted_angle) ;
+        Yvelocity =  modelParameters{angle}{2}.predict(spike_predicted_angle) ;
+
+        X = x_start + Xvelocity;
+        Y = y_start + Yvelocity;
 %     x = cumsum(modelParameters{angle}{1}' * smooth_fr);
 %     y = cumsum(modelParameters{angle}{2}' * smooth_fr);
     
@@ -115,6 +120,6 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
 
 %     x = modelParameters{1}.predict(smooth_fr')';
 %     y = modelParameters{2}.predict(smooth_fr')';
-    
 
+    end
 end
