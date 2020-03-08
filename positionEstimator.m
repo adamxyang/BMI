@@ -77,10 +77,10 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
             spike_train = data.spikes(neuron, :);       
             spike_sum = 0;
             t_start = window_start_timestep + (window-1)*win_len - 80;
-            if window_start_timestep + window*win_len - 80 < length(data.spikes)
+            if window_start_timestep + window*win_len - 80 < length(data.spikes)-80
                 t_end = window_start_timestep + window*win_len - 80;
             else
-                t_end = length(data.spikes);
+                t_end = length(data.spikes)-80;
             end
             
             spike_sum = sum(data.spikes(neuron,t_start:t_end));
