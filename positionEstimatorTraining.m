@@ -130,8 +130,8 @@ response_2 = NaN;
         end
     end
     tic;
-    classifier = fitcecoc(spike_count, response_2);
-%     classifier = fitcknn(spike_count,response_2,'NumNeighbors',10,'NSMethod','exhaustive','Distance','cosine');
+%     classifier = fitcecoc(spike_count, response_2);
+    classifier = fitcknn(spike_count,response_2,'NumNeighbors',10,'NSMethod','exhaustive','Distance','cosine');
     modelParameters{end+1} = classifier;
     toc
 end
