@@ -41,13 +41,20 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
 %                             end
 %                         end
 %                     end 
-                    t_start = window_start_timestep - 80;
-                    if window_start_timestep - 80 < timelength - 80
-                        t_end = window_start_timestep + window*win_len - 80;
+%                     t_start = window_start_timestep - 80;
+%                     if window_start_timestep - 80 < timelength - 80
+%                         t_end = window_start_timestep + window*win_len - 80;
+%                     else
+%                         t_end = timelength - 80;
+%                     end
+                    
+                    t_start = window_start_timestep;
+                    if window_start_timestep < timelength
+                        t_end = window_start_timestep + window*win_len;
                     else
-                        t_end = timelength - 80;
+                        t_end = timelength;
                     end
-
+                    
                     spike_sum = sum(data(trial,angle).spikes(neuron,t_start:t_end));
                     spike_angle(window_accu_length+window, neuron) = spike_sum;
                 end
