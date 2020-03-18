@@ -73,14 +73,16 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
         
         disp('training model 1')
         tic;
-        model1 = fitlm(spike_angle, distanceX);
+%         model1 = fitlm(spike_angle, distanceX);
+        model1 = fitrlinear(spike_angle,distanceX);
 %         model1 = fitrkernel(spike_angle, distanceX);
 %         model1 = fitrgp(spike_angle, distanceX);
         toc
         
         disp('training model 2')
         tic;
-        model2 = fitlm(spike_angle,distanceY);
+%         model2 = fitlm(spike_angle,distanceY);
+        model2 = fitrlinear(spike_angle,distanceY);
 %         model2 = fitrkernel(spike_angle,distanceY);
 %         model2 = fitrgp(spike_angle,distanceY);
         toc
