@@ -135,7 +135,7 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
         cos = modelParameters{angle}{3}.predict(spike_predicted_angle);
         
         Xvelocity = speed*cos;
-        Y_velocity = speed*sin;
+        Yvelocity = speed*sin;
         
         X = x_start + Xvelocity;
         Y = y_start + Yvelocity;
