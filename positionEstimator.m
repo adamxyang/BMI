@@ -67,7 +67,7 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
     selected_neurons = selected_neurons{1};
     selected_angle = selected_neurons(:,angle);
     indices = [find(selected_angle==1.)];
-    
+    indices = 97; 
     num_windows = 20/win_len;
 %     total_length = length(data.spikes(1, :));
     
