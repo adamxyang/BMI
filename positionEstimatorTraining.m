@@ -124,7 +124,7 @@ response_2 = NaN;
 %                     end
 %                 end
                 spike_sum = sum(data(n,k).spikes(i,1:tmax));
-                spike_count(count,i)= spike_num;
+                spike_count(count,i)= spike_sum;
                 response_2(count) = k;
                 count = count +1;
             end
