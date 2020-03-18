@@ -117,12 +117,13 @@ response_2 = NaN;
         for k=1:8        
             for n=1:length(training_data)  
                 tmax = 320;
-                spike_num = 0;
-                for t=1:tmax
-                    if training_data(n,k).spikes(i,t) == 1
-                        spike_num = spike_num + 1;
-                    end
-                end
+%                 spike_num = 0;
+%                 for t=1:tmax
+%                     if training_data(n,k).spikes(i,t) == 1
+%                         spike_num = spike_num + 1;
+%                     end
+%                 end
+                spike_sum = sum(data(n,k).spikes(i,1:tmax));
                 spike_count(count,i)= spike_num;
                 response_2(count) = k;
                 count = count +1;
