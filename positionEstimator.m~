@@ -129,14 +129,7 @@ function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
 
 %         Xvelocity =  modelParameters{angle}{1}.predict(spike_predicted_angle) ;
 %         Yvelocity =  modelParameters{angle}{2}.predict(spike_predicted_angle) ;
-        
-        speed = modelParameters{angle}{1}.predict(spike_predicted_angle);
-        sin = modelParameters{angle}{2}.predict(spike_predicted_angle);
-        cos = modelParameters{angle}{3}.predict(spike_predicted_angle);
-        
-        Xvelocity = speed*cos;
-        Y_velocity = speed*sin;
-        
+
         X = x_start + Xvelocity;
         Y = y_start + Yvelocity;
 %     x = cumsum(modelParameters{angle}{1}' * smooth_fr);
