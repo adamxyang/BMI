@@ -66,7 +66,7 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
                 distanceX(window_accu_length+window) = data(trial, angle).handPos(1,window_start_timestep + win_len)- data(trial, angle).handPos(1,window_start_timestep);
                 distanceY(window_accu_length+window) = data(trial, angle).handPos(2,window_start_timestep + win_len)- data(trial, angle).handPos(2,window_start_timestep);
                 
-                speed(window_accu_length+window) = sqrt(distanceX^2 + distanceY^2);
+                speed(window_accu_length+window) = sqrt(distanceX.^2 + distanceY.^2);
                 relative_sin(window_accu_length+window) = distanceY/speed(window_accu_length+window);
                 relative_cos(window_accu_length+window) = distanceX/speed(window_accu_length+window);
                 
