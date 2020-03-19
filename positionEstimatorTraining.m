@@ -51,15 +51,18 @@ function [modelParameters] = positionEstimatorTraining(training_data, scale, thr
         end
 
         tic;
-        model1 = fitrlinear(spike_angle, speed);
+%         model1 = fitrlinear(spike_angle, speed);
+        model1 = fitrkernel(spike_angle, speed);
         toc
 
         tic;
-        model2 = fitrlinear(spike_angle,relative_sin);
+%         model2 = fitrlinear(spike_angle,relative_sin);
+        model2 = fitrkernel(spike_angle, relative_sin);
         toc
 
         tic;
-        model3 = fitrlinear(spike_angle,relative_cos);
+%         model3 = fitrlinear(spike_angle,relative_cos);
+        model3 = fitrkernel(spike_angle, relative_cos);
         toc
 
         modelParameters{angle} = {model1, model2, model3, selected_neurons};
@@ -89,8 +92,8 @@ for i = 1:98
     end
 end
 tic;
-%     classifier = fitcecoc(spike_count, response_2);
-classifier = fitcknn(spike_count,response_2,'NumNeighbors',10,'NSMethod','exhaustive','Distance','cosine');
+classifier = fitcecoc(spike_count, response_2);
+% classifier = fitcknn(spike_count,response_2,'NumNeighbors',10,'NSMethod','exhaustive','Distance','cosine');
 modelParameters{end+1} = classifier;
 toc
 end
