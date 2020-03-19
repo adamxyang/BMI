@@ -40,4 +40,10 @@ function [selected_neurons] = tuning_curve(training_data, scale, thres, win_len)
     spike_sum = exp(spike_sum*scale);
     spike_sum = spike_sum./sum(spike_sum,2);
     selected_neurons = spike_sum>thres;
+    for angle = 1:8
+        if sum(selected_neurons(:,angle) == 0
+            [argval,idx] = max(spike_sum(:,angle));
+            selected_neurons(idx,angle) = 1;
+        end
+    end
 end
