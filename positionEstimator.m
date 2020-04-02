@@ -1,4 +1,4 @@
-function [x, y] = positionEstimator(test_data, modelParameters, win_len)
+function [X, Y] = positionEstimator(test_data, modelParameters, win_len)
 
   % **********************************************************
   %
@@ -40,39 +40,59 @@ function [x, y] = positionEstimator(test_data, modelParameters, win_len)
   % Return Value:
   % - [x, y]:
   %     current position of the hand
-    data = test_data;
-    
-    win_len = win_len;
-    smooth_fr = zeros(98, length(data.spikes));
-    for neuron = 1:98
-        spike_train = data.spikes(neuron, :);
-        for i = 1:win_len
-            smooth_fr(neuron, i) = sum(spike_train(1, 1:i)) / win_len;
-        end
-        for i = win_len+1:length(spike_train)
-            smooth_fr(neuron, i) = mean(spike_train(1, i-win_len:i));
-        end
-    end
-    
-    classifier = modelParameters{end};
-    angle = classifier.predict(smooth_fr');
-    angle = majorityvote(angle);
-    disp('predicted angle')
-    disp(angle)
+    data = test_data;    
+    spike_predicted_angle = zeros(1,1);
+        
+    new = NaN;
 
-    selected_neurons = modelParameters{angle}{3};
+    for i=1:98
+        spike_num = 0;
+        for t=1:320
+            if test_data.spikes(i,t) == 1
+                spike_num = spike_num + 1;
+            end
+        end
+        new(i)= spike_num;
+    end
+    classifier = modelParameters{end};
+    angle = classifier.predict(new);
+
+    selected_neurons = modelParameters{angle}(4);
+    selected_neurons = selected_neurons{1};
     selected_angle = selected_neurons(:,angle);
     indices = [find(selected_angle==1.)];
-    smooth_fr = smooth_fr(indices,:);
-    
-%     x = cumsum(modelParameters{angle}{1}' * smooth_fr);
-%     y = cumsum(modelParameters{angle}{2}' * smooth_fr);
-    
-    x = cumsum(modelParameters{angle}{1}.predict(smooth_fr'))';
-    y = cumsum(modelParameters{angle}{2}.predict(smooth_fr'))';
 
-%     x = modelParameters{1}.predict(smooth_fr')';
-%     y = modelParameters{2}.predict(smooth_fr')';
+    window_start_timestep = length(data.spikes) - 20; %fixed 20 step window
+    for idx = 1:length(indices)
+        neuron = indices(idx);
+        t_start = window_start_timestep;
+        if window_start_timestep< length(data.spikes)
+            t_end = window_start_timestep;
+        else
+            t_end = length(data.spikes);
+        end
+
+        spike_sum = sum(data.spikes(neuron,t_start:t_end));
+        spike_predicted_angle(1,idx) = spike_sum; % 1 means only '1 window' with 20 timesteps
+    end
     
+    if  length(test_data.spikes(1,:))-300 <= 20
+        x_start = test_data.startHandPos(1);
+        y_start = test_data.startHandPos(2);
+    else
+        last_position = test_data.decodedHandPos(:,end);
+        x_start = last_position(1);
+        y_start = last_position(2);
+    end
+
+    speed =  modelParameters{angle}{1}.predict(spike_predicted_angle) ;
+    sin =  modelParameters{angle}{2}.predict(spike_predicted_angle) ;
+    cos =  modelParameters{angle}{3}.predict(spike_predicted_angle) ;
+
+    Xvelocity = speed*cos;
+    Yvelocity = speed*sin;
+
+    X = x_start + Xvelocity;
+    Y = y_start + Yvelocity;    
 
 end

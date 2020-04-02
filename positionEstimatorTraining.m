@@ -1,120 +1,99 @@
-function [modelParameters] = positionEstimatorTraining(training_data, scale, thres, win_len)
-  % Arguments:
-  
-  % - training_data:
-  %     training_data(n,k)              (n = trial id,  k = reaching angle)
-  %     training_data(n,k).trialId      unique number of the trial
-  %     training_data(n,k).spikes(i,t)  (i = neuron id, t = time)
-  %     training_data(n,k).handPos(d,t) (d = dimension [1-3], t = time)
-  
-  % ... train your model
-  
-  % Return Value:
-  
-  % - modelParameters:
-  %     single structure containing all the learned parameters of your
-  %     model and which can be used by the "positionEstimator" function.
-  
+function [modelParameters] = positionEstimatorTraining(training_data, scale, thres, win_len)  
     data = training_data;
     selected_neurons = tuning_curve(data, scale, thres, win_len);  % neuron*angle
 
     % data = modify_data(training_data);
 
-
-    win_len = 50;
+    win_len = 20;    
     modelParameters = {};
     
-    X_all = ones(300000*8, 98);  % for classification
-    y_all = ones(300000*8,1);
-    total_length = 1;
     for angle = 1:8
-        start = 1;
+        
+        speed = NaN;
+        relative_sin = NaN;
+        relative_cos = NaN;
+        spike_angle = zeros(1,1);
         
         selected_angle = selected_neurons(:,angle);
-        indices = find(selected_angle==1.);
-        disp('indices')
-        disp(indices)
-        disp('number of selected neurons:')
-        disp(length(indices))
-        disp('angle')
-        disp(angle)
-
-        X = ones(30000 * 8, 98);
-        y = ones(30000 * 8, 2);
+        indices = find(selected_angle==1.);        %when to ask for it
+        window_accu_length = 0;
 
         for trial = 1:max(size(training_data))
-            for neuron = 1:98
-                spike_train = data(trial, angle).spikes(neuron, 300-win_len:end-100);
-                smooth_fr = zeros(1, length(spike_train));
-                for i = win_len:length(spike_train)
-                    smooth_fr(i) = mean(spike_train(1, i-win_len+1:i));
+            
+            timelength = length(data(trial, angle).spikes(1, 300-win_len:end-100));
+            windows = ceil(timelength./win_len);
+            window_start_timestep = 300-win_len;      
+
+            for window = 1: windows    
+                for idx = 1:length(indices)    
+                    neuron = indices(idx);
+                    t_start = window_start_timestep;
+                    if window_start_timestep + win_len < timelength
+                        t_end = window_start_timestep + win_len;
+                    else
+                        t_end = timelength;
+                    end
+                    
+                    spike_sum = sum(data(trial,angle).spikes(neuron,t_start:t_end));
+                    spike_angle(window_accu_length+window, idx) = spike_sum;
                 end
-                smooth_fr = smooth_fr(win_len:end)';
-                X(start:start+length(smooth_fr)-1, neuron) = smooth_fr;
+
+                distanceX= data(trial, angle).handPos(1,window_start_timestep + win_len)- data(trial, angle).handPos(1,window_start_timestep);
+                distanceY = data(trial, angle).handPos(2,window_start_timestep + win_len)- data(trial, angle).handPos(2,window_start_timestep);
+                
+                speed(window_accu_length+window) = sqrt(distanceX^2 + distanceY^2);
+                relative_sin(window_accu_length+window) = distanceY/speed(window_accu_length+window);
+                relative_cos(window_accu_length+window) = distanceX/speed(window_accu_length+window);
+                
+                window_start_timestep = window_start_timestep + win_len;
             end
-            y_prev = data(trial, angle).handPos(1:2, 299:end-100)';
-            y_now = data(trial, angle).handPos(1:2, 300:end-99)';
-            y(start:start+length(smooth_fr)-1, :) = y_now - y_prev;
-        %     y(start:start+length(smooth_fr)-1, :) = data(trial, angle).handPos(1:2, 300:end-99)';
-
-            start = start + length(smooth_fr);
+            window_accu_length = window_accu_length+windows; %goto another trial
         end
-        % end
-        X = X(1:start-1, :);
-        y = y(1:start-1, :);
-        
-%         X_all(1+(start-1)*(angle-1):(start-1)*angle,:) = X;
-%         y_all(1+(start-1)*(angle-1):(start-1)*angle,:) = y_all(1+(start-1)*(angle-1):(start-1)*angle,:)*angle;
-        
-        X_all(total_length:total_length+start-2,:) = X;
-        y_all(total_length:total_length+start-2,:) = y_all(total_length:total_length+start-2,1) * angle;
-        total_length = total_length + start-1;
 
-%         X_all(total_length:total_length+1,:) = X(1:2,:);
-%         y_all(total_length:total_length+1,:) = y_all(total_length:total_length+1,1) * angle;
-%         total_length = total_length + 2;
-        
-        
-        X = X(:,indices);
-
-    %     [beta,Sigma,E,CovB,logL] = mvregress(y, X);
-        %     [b1,bint1,r1,rint1,stats1] = regress(y(:,1), X);
-        %     [b2,bint2,r2,rint2,stats2] = regress(y(:,2), X);
-
-
-        disp('training model 1')
         tic;
-%         [b1,bint1,r1,rint1,stats1] = regress(y(:,1), X);
-    % %     model1 = fitrgp(X,y(:,1));
-        model1 = fitlm(X, y(:,1));
-%         model1 = fitrkernel(X, y(:,1));
+        model1 = fitrlinear(spike_angle, speed);
+%         model1 = fitrkernel(spike_angle, speed);
         toc
-        disp('complete')
 
-        disp('training model 2')
         tic;
-%         [b2,bint2,r2,rint2,stats2] = regress(y(:,2), X);
-    % %     model2 = fitrgp(X,y(:,2));
-        model2 = fitlm(X,y(:,2));
-%         model2 = fitrkernel(X, y(:,2));
+        model2 = fitrlinear(spike_angle,relative_sin);
+%         model2 = fitrkernel(spike_angle, relative_sin);
         toc
-        disp('complete')
 
-        %     model1 = fitsrsvm(X,y(:,1),'KernelFunction','gaussian','KernelScale','auto',...
-        %     'Standardize',true);
-        %     model2 = fitrsvm(X,y(:,2),'KernelFunction','gaussian','KernelScale','auto',...
-        %     'Standardize',true);
+        tic;
+        model3 = fitrlinear(spike_angle,relative_cos);
+%         model3 = fitrkernel(spike_angle, relative_cos);
+        toc
 
-        modelParameters{angle} = {model1, model2, [selected_neurons]};
-    %     modelParameters = {, selected_neurons,angle};
-%         modelParameters{angle} = {b1,b2,selected_neurons};
-        
+        modelParameters{angle} = {model1, model2, model3, selected_neurons};
+       
     end
     
-    tic;
-    X_all = X_all(1:total_length-1,:);
-    y_all = y_all(1:total_length-1,:);
-    classifier = fitcecoc(X_all,y_all);
-    modelParameters{end+1} = classifier;
-    toc
+spike_count = NaN;
+
+response_2 = NaN;
+
+for i = 1:98
+    count =1;
+    for k=1:8        
+        for n=1:length(training_data)  
+            tmax = 320;
+%                 spike_num = 0;
+%                 for t=1:tmax
+%                     if training_data(n,k).spikes(i,t) == 1
+%                         spike_num = spike_num + 1;
+%                     end
+%                 end
+            spike_sum = sum(data(n,k).spikes(i,1:tmax));
+            spike_count(count,i)= spike_sum;
+            response_2(count) = k;
+            count = count +1;
+        end
+    end
+end
+tic;
+classifier = fitcecoc(spike_count, response_2);
+% classifier = fitcknn(spike_count,response_2,'NumNeighbors',10,'NSMethod','exhaustive','Distance','cosine');
+modelParameters{end+1} = classifier;
+toc
 end
