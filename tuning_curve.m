@@ -31,8 +31,8 @@ function [selected_neurons] = tuning_curve(training_data, scale, thres, win_len)
             for trial = 1:max(length(data))
                 spike_train = data(trial, angle).spikes(neuron, 300-win_len:end-100);
                 neuron_sum = sum(spike_train);
+                spike_sum(neuron,angle) = spike_sum(neuron,angle) + neuron_sum;
             end
-            spike_sum(neuron,angle) = neuron_sum;
         end
     end
 
